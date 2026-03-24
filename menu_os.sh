@@ -1,8 +1,12 @@
 #!/bin/bash
 
-parametro=$1
+if [ "$1" = "-d" ]; then
+    rm -rf ~/EPNro1
+    pkill -f consolidar.sh
+    exit 0
+fi
 
-while true; 
+while [ "$opcion" -ne 6 ]; 
 do
     echo "-----MENU-----"
     echo "1) Crear entorno"
@@ -28,17 +32,28 @@ do
 		echo "Corriendo proceso"
 		nohup ~/EPNro1/consolidar.sh &
 	   fi 
-      ;;
+           ;;
 
-        3) --
+        3)
+	   if [ -f ~/EPNro1/salida/"$FILENAME".txt ]; then
+		sort -n ~/EPNro1/salida/"$FILENAME".txt
+	   fi
+	   ;;
 
         4)
+	   if [ -f ~/EPNro1/salida/"$FILENAME".txt ]; then
+		sort -k4  -n  -r ~/EPNro1/salida/"$FILENAME".txt | head -10
+	   fi
+	   ;;
 
         5)
+	   echo -n "Ingrese un número de padrón: "
+    	   read padron
+	   grep "$padron" ~/EPNro1/salida/"$FILENAME".txt
+	   ;;
 
         6)
 	   echo "Saliendo..."
-           exit 0;;
-
+           ;;
     esac
 done
